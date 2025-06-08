@@ -114,7 +114,7 @@ end
 function M.find_file()
     M._current_dir = get_current_buffer_directory()
     if M._current_dir == "" then
-        M._current_dir = vim.cmd.pwd()
+        M._current_dir = vim.uv.cwd() .. "/"
     end
     M._highlight_line = 0
     M._restore = {
