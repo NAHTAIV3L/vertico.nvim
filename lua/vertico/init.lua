@@ -73,7 +73,9 @@ end
 
 local function update_results()
     local prompt = vim.api.nvim_buf_get_lines(M._input_buffer, 0, 1, false)[1]
-    local files = vim.iter(list_directory(M._current_dir))
+    local status, results = pcall(list_directory, M._current_dir)
+    if ~status then return end
+    local files = vim.iter(results)
         :filter(function (file)
             return file:find(get_search_term(prompt), 1, true)
         end)
@@ -111,6 +113,9 @@ end
 
 function M.find_file()
     M._current_dir = get_current_buffer_directory()
+    if M._current_dir == "" then
+        M._current_dir = vim.cmd.pwd()
+    end
     M._highlight_line = 0
     M._restore = {
         cmdheight = vim.o.cmdheight
@@ -240,5 +245,7 @@ function M.find_file()
     end)
     main()
 end
+
+M.find_file()
 
 return M
