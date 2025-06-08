@@ -74,7 +74,7 @@ end
 local function update_results()
     local prompt = vim.api.nvim_buf_get_lines(M._input_buffer, 0, 1, false)[1]
     local status, results = pcall(list_directory, M._current_dir)
-    if ~status then return end
+    if status == false then return end
     local files = vim.iter(results)
         :filter(function (file)
             return file:find(get_search_term(prompt), 1, true)
@@ -245,7 +245,5 @@ function M.find_file()
     end)
     main()
 end
-
-M.find_file()
 
 return M
